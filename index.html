@@ -1,0 +1,150 @@
+
+<html>
+
+<head>
+    <title>Fishing </title>
+    <style type="text/css">
+    #myFishingGame {
+        border: 1px solid #d3d3d3;
+        background-color: #f1f1f1;
+        margin-left: 20px;
+    }
+    </style>
+</head>
+
+<body onload="startGame()">
+<div id="collisions">0</div>
+    <canvas id="myFishingGame" width="1200" height="500">
+    </canvas>
+    <script type="text/javascript">
+    var myHero;
+    var fish;
+    var fishes = [];
+    var fishImages = new Array(6);
+    /* fishImage[0]=new image();
+    fishImages[0].src=new "nemo.png"
+    fishImage[1]=new image();
+    fishImages[1].src=new "nemo1.png"
+    fishImage[2]=new image();
+    fishImages[2].src=new "nemo2.png"
+    fishImage[3]=new image();
+    fishImages[3].src=new "nemo3.png"
+    fishImage[4]=new image();
+    fishImages[4].src=new "nemo4.png"
+    fishImage[5]=new image();
+    fishImages[5].src=new "nemo5.png"*/
+    var fishCount = 10;
+    var collisions=0;
+    var myGameArea = {
+        canvas: document.getElementById("myFishingGame"),
+        start: function() {
+            this.context = this.canvas.getContext("2d");
+            this.interval = setInterval(updateGameArea, 50);
+         window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    }, 
+        clear: function() {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    function updateGameArea() {
+        myGameArea.clear();
+        //myHero.x++;
+        for (var i = 0; i < fishCount; i++) {
+            fishes[i].x=fishes[i].x+fishes[i].speed;
+            if(fishes[i].x>=myHero.x && fishes[i].x<=myHero.x+myHero.width && fishes[i].y>=myHero.y && fishes[i].y<=myHero.y+myHero.height){
+            	fishes[i].x=Math.floor(Math.random()*600+1);
+            	collisions++;
+            	fishes[i].y=Math.floor(Math.random()*480+1);
+            	document.getElementById("collisions").innerHTML=collisions;
+            }
+            fishes[i].update();
+        }
+         myHero.speedx = 0;
+         myHero.speedy = 0; 
+    if (myGameArea.key && myGameArea.key == 37) {myHero.speedx = -10; }
+    if (myGameArea.key && myGameArea.key == 39) {myHero.speedx = 10; }
+    if (myGameArea.key && myGameArea.key == 38) {myHero.speedy = -10; }
+    if (myGameArea.key && myGameArea.key == 40) {myHero.speedy = 10; }
+    myHero.newPos(); 
+    myHero.update();
+    }
+    var startGame = function() {
+        myGameArea.start();
+        myHero = new Component1(180, 80, "shark.jpg", 400, 120, "image");
+        for (var i = 0; i < fishCount; i++) {
+            var myRandomNo = Math.floor(Math.random() * 500)
+            var RandomSpeed=Math.floor(Math.random()*4+1);
+            var num=Math.floor(Math.random());
+            fishes.push(new Component(40, 40, "aa.jpg", i*20, myRandomNo,RandomSpeed, "image"));
+        }
+    }
+
+    function Component(width, height, color, x, y,speed,type) {
+        this.type = type;
+        if (type == "image"){
+            this.image = new Image();
+            this.image.src = color;
+        }
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.speed=speed;
+        this.update = function() {
+            var ctx = myGameArea.context;
+            if(type == "image") {
+                ctx.drawImage(this.image,
+                    this.x,
+                    this.y,
+                    this.width, this.height);
+            } else {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        }
+
+    }
+    function Component1(width, height, color, x, y,type) {
+        this.type = type;
+        if (type == "image"){
+            this.image = new Image();
+            this.image.src = color;
+        }
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.speedx=0;
+        this.speedy=0;
+        this.update = function() {
+            var ctx = myGameArea.context;
+            if(type == "image") {
+                ctx.drawImage(this.image,
+                    this.x,
+                    this.y,
+                    this.width, this.height);
+            } else {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        }
+
+
+    this.newPos = function() {
+        this.x += this.speedx;
+        this.y +=this.speedy;
+
+    }
+}
+    </script>
+</body>
+
+</html>
